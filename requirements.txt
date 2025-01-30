@@ -2,4 +2,5 @@ pandas
 plotly.express
 streamlit
 requests
+openpyxl
 io
