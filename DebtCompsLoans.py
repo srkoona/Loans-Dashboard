@@ -8,7 +8,9 @@ from io import BytesIO
 
 st.set_page_config(page_title="Debt Comps", 
                    page_icon=":chart_increasing:", 
-                   layout="wide")
+                   layout="wide",
+                   initial_sidebar_state="expanded", 
+                   theme="dark")
 
 url = 'https://github.com/srkoona/Loans-Dashboard/raw/refs/heads/main/Debt%20Comps%20Dash%20HC.xlsx'
 
