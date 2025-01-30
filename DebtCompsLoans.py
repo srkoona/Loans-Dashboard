@@ -3,6 +3,7 @@ import pandas as pd
 import plotly.express as px
 import streamlit as st
 import requests
+import openpyxl
 from io import BytesIO
 
 st.set_page_config(page_title="Debt Comps", 
