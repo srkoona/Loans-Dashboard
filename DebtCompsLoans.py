@@ -9,7 +9,7 @@ st.set_page_config(page_title="Debt Comps",
                    page_icon=":chart_increasing:", 
                    layout="wide")
 
-url = 'https://franklintempleton-my.sharepoint.com/:x:/r/personal/s_rkoonadi_benefitstreetpartners_com/Documents/Desktop/Python/Dashboard/Debt%20Comps%20Dash%20HC.xlsx?d=w28708552ee434b359d6690957ae5f186&csf=1&web=1&e=Otl65q'
+url = 'https://github.com/srkoona/Loans-Dashboard/raw/refs/heads/main/Debt%20Comps%20Dash%20HC.xlsx'
 
 # Fetch the raw file content using requests
 response = requests.get(url)
@@ -18,14 +18,17 @@ response.raise_for_status()  # Ensure the request was successful
 # Read the content of the file into a pandas DataFrame
 excel_file = BytesIO(response.content)  # Convert the content into a file-like object
 
-df = pd.read_excel(
-  io = excel_file,
-  engine = "openpyxl",
-  sheet_name= "Loans",
-  skiprows=3,
-  usecols="G:X",
-  nrows=261
-  )
+def getdata_excel():
+    df = pd.read_excel(
+        io = excel_file,
+        engine = "openpyxl",
+        sheet_name= "Loans",
+        skiprows=3,
+        usecols="G:X",
+        nrows=261
+    )
+
+    return df
 
 df = getdata_excel()
 
