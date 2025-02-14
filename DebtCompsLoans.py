@@ -49,6 +49,12 @@ df = df[(df["DM"] > qlower_DM) & (df["DM"] < qupper_DM)]
 
 st.sidebar.header("Filter Options:")
 
+flag = st.sidebar.multiselect(
+    "Portfolio Flag:",
+    options=df["Flag"].unique(),
+    default=df["Flag"].unique()
+)
+
 sector = st.sidebar.multiselect(
     "Subsector:",
     options=df["Industry"].unique(),
@@ -93,8 +99,13 @@ DMn, DMx = st.sidebar.slider(
 )
 
 df_selection = df.query(
-    "Industry == @sector & Segment == @subsector & Moodys == @rating & YTM >= @yieldn & YTM <= @yieldx & Ask >= @pricen & Ask <= @pricex & DM >= @DMn & DM <= @DMx"
+    "(Industry == @sector) & (Segment == @subsector) & (Moodys == @rating) & (Flag == @flag) & "
+    "(YTM >= @yieldn) & (YTM <= @yieldx) & "
+    "(Ask >= @pricen) & (Ask <= @pricex) & "
+    "(DM >= @DMn) & (DM <= @DMx)"
+    
 )
+
 st.dataframe(df_selection)
 
 #===============MAINPAGE=====================
@@ -168,6 +179,15 @@ left_column, right_column = st.columns(2)
 left_column.plotly_chart(chart_segment, use_container_width=True)
 right_column.plotly_chart(chart_rating, use_container_width=True)
 
+treemap = px.treemap(
+    df,
+    path=["Industry","Segment","Issuer"],
+    values="Relative Weight",
+    color="Spread",
+    color_continuous_scale="YlGn",
+    title="<b>Treemap</b>"
+)
+
 #===========Price x DM Chart==========
 mid_DM = df_filtered["DM"].mean()
 mid_Ask = df_filtered["Ask"].mean()
@@ -196,31 +216,6 @@ chart_op.add_shape(
     x0=qlower_DM, x1=qupper_DM, y0=mid_Ask, y1=mid_Ask,
     line=dict(color="Red", width=2, dash="dash")
 )
-
-#===============Leverage vs DM======================
-
-#mid_L= df_filtered["LEVERAGE"].mean()
-
-#DM_Lev = df_filtered[["Issuer","Leverage","Moodys","DM"]]
-#chart_leverage = px.scatter(
-#    DM_Lev,
-#    x="DM",
-#    y="Leverage",
-#    hover_name = "Issuer",
-#    color="Moodys",
-#    title="<b>Leverage v DM</b>"
-#)
-
-
-#chart_lev.add_shape(
-#      x0=mid_DM, x1=mid_DM, y0=df_filtered["Leverage"].min(), y1=df_filtered["Leverage"].max(),
-#     line=dict(color="Red", width=2, dash="dash")
-#)
-
-#chart_lev.add_shape(
-#    x0=qlower_DM, x1=qupper_DM, y0=mid_L, y1=mid_L,
-#    line=dict(color="Red", width=2, dash="dash")
-#)
 
 #===================YTM v Price=======================
 df_filtered_YTM = df_selection[(df_selection["YTM"] > qlower_YTM) & (df_selection["YTM"] < qupper_YTM)]
@@ -270,7 +265,7 @@ chart_Relrating = px.box(
 
 #=============New Project========================
 
-
+st.plotly_chart(treemap, use_container_width=True)
 st.plotly_chart(chart_op, use_container_width=True)
 st.plotly_chart(chart_yp, use_container_width=True)
 st.plotly_chart(chart_Relrating, use_container_width=True)
