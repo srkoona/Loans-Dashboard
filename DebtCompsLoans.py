@@ -145,14 +145,13 @@ df_filtered = df_selection[(df_selection["DM"] > qlower_DM) & (df_selection["DM"
 
 #=============DM by Segment===============
 
-
-DM_Segment = df_filtered.groupby(by=["Segment"])["DM"].mean().to_frame()
+DM_Segment = df_filtered.groupby(by=["Industry"])["DM"].mean().to_frame()
 
 chart_segment = px.bar(
     DM_Segment,
     x=DM_Segment.index,
     y="DM",
-    title="<b>DM by Segment</b>",
+    title="<b>DM by Sector</b>",
     color_discrete_sequence=["#0083B8"] * len(DM_Segment),
     template="plotly_white",
 )
